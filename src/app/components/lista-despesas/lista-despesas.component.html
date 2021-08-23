@@ -30,7 +30,7 @@
 <div class="row" *ngIf="idDespesaSelecionada == ''">
     <div class="col-xs-12 col-md-6 btn-grupo-acoes">
         <button class="btn btn-secondary">Novo Ciclo</button> |
-        <button class="btn btn-primary">Nova Despesa</button> |
+        <button class="btn btn-primary" [routerLink]="['/adicionar-despesa']">Nova Despesa</button> |
         <button class="btn btn-primary" disabled>Salvar</button>
     </div>
 </div>

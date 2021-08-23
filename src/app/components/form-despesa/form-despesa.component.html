@@ -1,1 +1,35 @@
-<p>form-despesa works!</p>
+<div class="row">
+    <div class="col-xs-12">
+        <form #formDespesa="ngForm" (ngSubmit)="onSubmitForm(formDespesa)">
+            <div class="form-group">
+                <label for="nome">Nome</label>
+                <input id="nome" type="text" class="form-control" ngModel name="nome" required>
+                <small id="nome-help" class="form-text text-muted">
+                    Digite um nome para a nova despesa.
+                </small>
+            </div>
+            <div class="form-group">
+                <label for="valor">Valor</label>
+                <input id="valor" type="text" class="form-control" ngModel name="valor" required>
+                <small id="valor-help" class="form-text text-muted">
+                    Digite um valor para a nova despesa.
+                </small>
+            </div>
+            <div class="form-group">
+                <label for="paga">Paga</label>
+                <select id="paga" class="form-control" ngModel name="paga" required>
+                    <option value="true">Não</option>
+                    <option value="false">Sim</option>
+                </select>
+                <small id="paga-help" class="form-text text-muted">
+                    Digite um valor para a nova despesa.
+                </small>
+            </div>
+            <div class="div-btn-acoes">
+                <button class="btn btn-primary btn-submit" type="submit"
+                    [disabled]="formDespesa.valid == false">Salvar</button> |
+                <button type="button" class="btn btn-secondary" [routerLink]="['/despesas']">Voltar</button>
+            </div>
+        </form>
+    </div>
+</div>
