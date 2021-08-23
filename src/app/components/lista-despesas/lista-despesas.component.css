@@ -2,6 +2,10 @@
     text-decoration: line-through;
 }
 
+.li-despesa {
+    cursor: pointer;
+}
+
 .titulo-mes-ano {
     text-align: right;
     color: lightgrey;

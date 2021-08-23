@@ -6,8 +6,9 @@
 <div class="row">
     <div class="col-xs-12 col-md-6">
         <ul class="list-group">
-            <li *ngFor="let despesa of despesas" [ngClass]="{ 'li-despesa-paga': despesa.paga == true }"
-                class="list-group-item d-flex justify-content-between align-items-center">
+            <li *ngFor="let despesa of despesas" (click)="trocarStatusDespesa(despesa.id) "
+                [ngClass]="{ 'li-despesa-paga': despesa.paga == true }"
+                class="list-group-item d-flex justify-content-between align-items-center li-despesa">
                 {{ despesa.nome }}
                 <span [ngClass]="{ 'alert-success': despesa.paga == true, 'alert-warning': despesa.paga == false }"
                     class="badge badge-pill">
