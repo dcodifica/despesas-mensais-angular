@@ -12,6 +12,8 @@ export class ListaDespesasComponent implements OnInit, OnDestroy {
   despesas!: Despesa[];
   mesAtual: string = 'SET/2021';
   despesasForamAlteradasSubscription!: Subscription;
+  idDespesaSelecionada: string = '';
+  radioDespesaSelecionada!: HTMLInputElement;
 
   constructor(private despesasService: DespesasService) { }
 
@@ -28,6 +30,16 @@ export class ListaDespesasComponent implements OnInit, OnDestroy {
 
   trocarStatusDespesa(idDespesa: string): void {
     this.despesasService.trocarStatusDespesa(idDespesa);
+  }
+
+  selecionarDespesa(idDespesa: string, radioSelecaoDespesa: HTMLInputElement): void {
+    this.radioDespesaSelecionada = radioSelecaoDespesa;
+    this.idDespesaSelecionada = idDespesa;
+  }
+
+  cancelarSelecaoDespesa(): void {
+    this.idDespesaSelecionada = '';
+    this.radioDespesaSelecionada.checked = false;
   }
 
   ngOnDestroy(): void {

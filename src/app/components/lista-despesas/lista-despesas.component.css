@@ -1,8 +1,8 @@
-.li-despesa-paga {
+.badge-despesa-paga {
     text-decoration: line-through;
 }
 
-.li-despesa {
+.pointer {
     cursor: pointer;
 }
 
@@ -15,4 +15,8 @@
 .btn-grupo-acoes {
     margin-top: 10px;
     text-align: center;
+}
+
+.nome-despesa {
+    margin-left: 7px;
 }
