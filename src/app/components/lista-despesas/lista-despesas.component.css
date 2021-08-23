@@ -11,3 +11,8 @@
     color: lightgrey;
     letter-spacing: 2px;
 }
+
+.btn-grupo-acoes {
+    margin-top: 10px;
+    text-align: center;
+}
