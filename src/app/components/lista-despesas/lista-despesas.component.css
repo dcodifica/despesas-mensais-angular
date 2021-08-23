@@ -1,0 +1,9 @@
+.li-despesa-paga {
+    text-decoration: line-through;
+}
+
+.titulo-mes-ano {
+    text-align: right;
+    color: lightgrey;
+    letter-spacing: 2px;
+}
