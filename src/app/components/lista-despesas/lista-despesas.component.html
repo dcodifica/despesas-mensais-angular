@@ -12,7 +12,7 @@
                 {{ despesa.nome }}
                 <span [ngClass]="{ 'alert-success': despesa.paga == true, 'alert-warning': despesa.paga == false }"
                     class="badge badge-pill">
-                    R$ {{ despesa.valor }}
+                    {{ despesa.valor | moeda }}
                 </span>
             </li>
         </ul>
