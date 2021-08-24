@@ -7,6 +7,7 @@ import { Despesa } from '../shared/despesa';
 })
 export class DespesasService {
   despesasForamAlteradas: Subject<Despesa[]> = new Subject<Despesa[]>();
+  despesaFoiSelecionada: Subject<HTMLInputElement> = new Subject<HTMLInputElement>();
   private despesas: Despesa[] = [
     { id: '0', nome: 'Internet', valor: 99.99, paga: false },
     { id: '1', nome: 'Aluguel', valor: 4700.11, paga: false },
@@ -29,7 +30,11 @@ export class DespesasService {
     this.notificarAlteracao();
   }
 
-  private notificarAlteracao(): void {
+  notificarAlteracao(): void {
     this.despesasForamAlteradas.next(this.getDespesas());
+  }
+
+  notificarDespesaSelecionada(radioDespesaSelecionada: HTMLInputElement): void {
+    this.despesaFoiSelecionada.next(radioDespesaSelecionada);
   }
 }

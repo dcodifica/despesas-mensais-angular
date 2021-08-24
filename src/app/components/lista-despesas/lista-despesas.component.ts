@@ -12,6 +12,7 @@ export class ListaDespesasComponent implements OnInit, OnDestroy {
   despesas!: Despesa[];
   mesAtual: string = 'SET/2021';
   despesasForamAlteradasSubscription!: Subscription;
+  despesasFoiSelecionadaSubscription!: Subscription;
   idDespesaSelecionada: string = '';
   radioDespesaSelecionada!: HTMLInputElement;
 
@@ -26,16 +27,16 @@ export class ListaDespesasComponent implements OnInit, OnDestroy {
             this.despesas = despesas;
           }
         );
-  }
-
-  trocarStatusDespesa(idDespesa: string): void {
-    this.despesasService.trocarStatusDespesa(idDespesa);
-  }
-
-  selecionarDespesa(event: MouseEvent, idDespesa: string): void {
-    console.log(event.target);
-    this.radioDespesaSelecionada = <HTMLInputElement>event.target;
-    this.idDespesaSelecionada = idDespesa;
+    this.despesasFoiSelecionadaSubscription =
+      this.despesasService.despesaFoiSelecionada
+        .subscribe(
+          radioDespesaSelecionada => {
+            const arrayIdElemento = radioDespesaSelecionada.id.split('-');
+            const indexIdDespesa = arrayIdElemento.length - 1;
+            this.idDespesaSelecionada = arrayIdElemento[indexIdDespesa];
+            this.radioDespesaSelecionada = radioDespesaSelecionada;
+          }
+        );
   }
 
   cancelarSelecaoDespesa(): void {
@@ -45,5 +46,6 @@ export class ListaDespesasComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.despesasForamAlteradasSubscription.unsubscribe();
+    this.despesasFoiSelecionadaSubscription.unsubscribe();
   }
 }

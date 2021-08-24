@@ -1,11 +1,3 @@
-.badge-despesa-paga {
-    text-decoration: line-through;
-}
-
-.pointer {
-    cursor: pointer;
-}
-
 .titulo-mes-ano {
     text-align: right;
     color: lightgrey;
@@ -15,8 +7,4 @@
 .btn-grupo-acoes {
     margin-top: 20px;
     text-align: center;
-}
-
-.nome-despesa {
-    margin-left: 7px;
 }

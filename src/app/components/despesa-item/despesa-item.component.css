@@ -1,0 +1,11 @@
+.badge-despesa-paga {
+    text-decoration: line-through;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.nome-despesa {
+    margin-left: 7px;
+}

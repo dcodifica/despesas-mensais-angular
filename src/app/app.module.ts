@@ -7,13 +7,15 @@ import { AppComponent } from './app.component';
 import { ListaDespesasComponent } from './components/lista-despesas/lista-despesas.component';
 import { MoedaPipe } from './pipes/moeda.pipe';
 import { FormDespesaComponent } from './components/form-despesa/form-despesa.component';
+import { DespesaItemComponent } from './components/despesa-item/despesa-item.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ListaDespesasComponent,
     MoedaPipe,
-    FormDespesaComponent
+    FormDespesaComponent,
+    DespesaItemComponent
   ],
   imports: [
     BrowserModule,

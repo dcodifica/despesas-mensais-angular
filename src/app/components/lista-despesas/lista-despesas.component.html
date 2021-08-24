@@ -1,42 +1,25 @@
-<div class="row">
-    <div class="col-xs-12 titulo-mes-ano">
-        <h3>{{ mesAtual }}</h3>
-    </div>
+<h3 class="titulo-mes-ano">{{ mesAtual }}</h3>
+<ul class="list-group">
+    <app-despesa-item 
+        *ngFor="let despesa of despesas" 
+        [despesa]="despesa">
+    </app-despesa-item>
+</ul>
+<div class="btn-grupo-acoes" *ngIf="idDespesaSelecionada == ''">
+    <button class="btn btn-outline-secondary">Novo Ciclo</button>
+    <button 
+        class="btn btn-outline-primary" 
+        [routerLink]="['/adicionar-despesa']">
+        Nova Despesa
+    </button>
+    <button class="btn btn-outline-primary" disabled>Salvar</button>
 </div>
-<div class="row">
-    <div class="col-xs-12">
-        <ul class="list-group">
-            <li *ngFor="let despesa of despesas"
-                class="list-group-item d-flex justify-content-between align-items-center li-despesa">
-                <div>
-                    <input (click)="selecionarDespesa($event, despesa.id)" class="form-check-input pointer" type="radio"
-                        name="radio-despesa" [id]="'radio-selecao-despesa-' + despesa.id">
-                    <label class="nome-despesa form-check-label pointer"
-                        [for]="'radio-selecao-despesa-' + despesa.id">{{
-                        despesa.nome }}
-                    </label>
-                </div>
-                <span [ngClass]="{ 'alert-success': despesa.paga == true, 
-                    'alert-warning': despesa.paga == false, 
-                    'badge-despesa-paga': despesa.paga == true }" (click)="trocarStatusDespesa(despesa.id)"
-                    class="badge badge-pill pointer">
-                    {{ despesa.valor | moeda }}
-                </span>
-            </li>
-        </ul>
-    </div>
-</div>
-<div class="row" *ngIf="idDespesaSelecionada == ''">
-    <div class="col-xs-12 btn-grupo-acoes">
-        <button class="btn btn-secondary">Novo Ciclo</button> |
-        <button class="btn btn-primary" [routerLink]="['/adicionar-despesa']">Nova Despesa</button> |
-        <button class="btn btn-primary" disabled>Salvar</button>
-    </div>
-</div>
-<div class="row" *ngIf="idDespesaSelecionada != ''">
-    <div class="col-xs-12 btn-grupo-acoes">
-        <button class="btn btn-secondary" (click)="cancelarSelecaoDespesa()">Voltar</button> |
-        <button class="btn btn-primary">Editar</button> |
-        <button class="btn btn-danger">Excluir</button>
-    </div>
+<div class="col-xs-12 btn-grupo-acoes" *ngIf="idDespesaSelecionada != ''">
+    <button 
+        class="btn btn-outline-secondary" 
+        (click)="cancelarSelecaoDespesa()">
+        Voltar
+    </button>
+    <button class="btn btn-outline-primary">Editar</button>
+    <button class="btn btn-outline-danger">Excluir</button>
 </div>
