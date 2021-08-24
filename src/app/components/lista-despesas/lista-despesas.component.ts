@@ -31,9 +31,8 @@ export class ListaDespesasComponent implements OnInit, OnDestroy {
       this.despesasService.despesaFoiSelecionada
         .subscribe(
           radioDespesaSelecionada => {
-            const arrayIdElemento = radioDespesaSelecionada.id.split('-');
-            const indexIdDespesa = arrayIdElemento.length - 1;
-            this.idDespesaSelecionada = arrayIdElemento[indexIdDespesa];
+            this.idDespesaSelecionada =
+              <string>radioDespesaSelecionada.id.split('-').pop();
             this.radioDespesaSelecionada = radioDespesaSelecionada;
           }
         );

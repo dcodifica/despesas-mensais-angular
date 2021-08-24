@@ -1,28 +1,37 @@
 <div class="row">
     <div class="col-xs-12">
+        <h1>Incluir Despesa</h1>
+    </div>
+</div>
+<hr>
+<div class="row">
+    <div class="col-xs-12">
         <form #formDespesa="ngForm" (ngSubmit)="onSubmitForm(formDespesa)">
             <div class="form-group">
                 <label for="nome">Nome</label>
-                <input id="nome" type="text" class="form-control" ngModel name="nome" required>
-                <small id="nome-help" class="form-text text-muted">
+                <input id="nome" type="text" class="form-control" ngModel name="nome" #nome="ngModel" required>
+                <small id="nome-help" class="form-text text-muted"
+                    [ngClass]="{'small-invalid': nome.valid == false && nome.touched == true}">
                     Digite um nome para a nova despesa.
                 </small>
             </div>
             <div class="form-group margem-superior">
                 <label for="valor">Valor</label>
-                <input id="valor" type="text" class="form-control" ngModel name="valor" required>
-                <small id="valor-help" class="form-text text-muted">
+                <input id="valor" type="text" class="form-control" ngModel name="valor" #valor="ngModel" required>
+                <small id="valor-help" class="form-text text-muted"
+                    [ngClass]="{'small-invalid': valor.valid == false && valor.touched == true}">
                     Digite um valor para a nova despesa.
                 </small>
             </div>
             <div class="form-group margem-superior">
                 <label for="paga">Paga</label>
-                <select id="paga" class="form-control" ngModel name="paga" required>
-                    <option value="true">Não</option>
-                    <option value="false">Sim</option>
+                <select id="paga" class="form-control" ngModel name="paga" #paga="ngModel" required>
+                    <option value="false">Não</option>
+                    <option value="true">Sim</option>
                 </select>
-                <small id="paga-help" class="form-text text-muted">
-                    Digite um valor para a nova despesa.
+                <small id="paga-help" class="form-text text-muted"
+                    [ngClass]="{'small-invalid': paga.valid == false && paga.touched == true}">
+                    Selecione um status para a despesa.
                 </small>
             </div>
             <div class="div-btn-acoes margem-superior">

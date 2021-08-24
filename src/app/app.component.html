@@ -2,5 +2,9 @@
   <a class="navbar-brand">DESPESAS</a>
 </nav>
 <div class="container">
+  <div (click)="ocultarAlertDespesaIncluida()" *ngIf="despesaAdicionada == true" class="alert alert-success"
+    role="alert">
+    Despesa adicionada com sucesso!
+  </div>
   <router-outlet></router-outlet>
 </div>

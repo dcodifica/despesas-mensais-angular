@@ -2,21 +2,14 @@
     justify-content-between 
     align-items-center li-despesa">
     <div>
-        <input 
-            class="form-check-input pointer" 
-            type="radio" name="radio-despesa"
-            (click)="selecionarDespesa($event)" 
-            [id]="'radio-selecao-despesa-' + despesa.id">
-        <label 
-            class="nome-despesa form-check-label pointer" 
-            [for]="'radio-selecao-despesa-' + despesa.id">
+        <input class="form-check-input pointer" (click)="selecionarDespesa($event)"
+            [id]="'rd-selecao-despesa-' + despesa.id" type="radio" name="rd-despesa">
+        <label class="nome-despesa form-check-label pointer" [for]="'rd-selecao-despesa-' + despesa.id">
             {{ despesa.nome }}
         </label>
     </div>
-    <span 
-        class="badge badge-pill pointer" 
-        (click)="trocarStatusDespesa(despesa.id)"
-        [ngClass]="{ 'alert-success': despesa.paga == true, 
+    <span class="badge badge-pill pointer" (click)="trocarStatusDespesa(despesa.id)" [ngClass]="{ 
+            'alert-success': despesa.paga == true, 
             'alert-warning': despesa.paga == false, 
             'badge-despesa-paga': despesa.paga == true }">
         {{ despesa.valor | moeda }}

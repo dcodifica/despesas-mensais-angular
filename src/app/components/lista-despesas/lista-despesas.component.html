@@ -1,23 +1,17 @@
 <h3 class="titulo-mes-ano">{{ mesAtual }}</h3>
 <ul class="list-group">
-    <app-despesa-item 
-        *ngFor="let despesa of despesas" 
-        [despesa]="despesa">
+    <app-despesa-item *ngFor="let despesa of despesas" [despesa]="despesa">
     </app-despesa-item>
 </ul>
 <div class="btn-grupo-acoes" *ngIf="idDespesaSelecionada == ''">
     <button class="btn btn-outline-secondary">Novo Ciclo</button>
-    <button 
-        class="btn btn-outline-primary" 
-        [routerLink]="['/adicionar-despesa']">
+    <button class="btn btn-outline-primary" [routerLink]="['/adicionar-despesa']">
         Nova Despesa
     </button>
     <button class="btn btn-outline-primary" disabled>Salvar</button>
 </div>
 <div class="col-xs-12 btn-grupo-acoes" *ngIf="idDespesaSelecionada != ''">
-    <button 
-        class="btn btn-outline-secondary" 
-        (click)="cancelarSelecaoDespesa()">
+    <button class="btn btn-outline-secondary" (click)="cancelarSelecaoDespesa()">
         Voltar
     </button>
     <button class="btn btn-outline-primary">Editar</button>
