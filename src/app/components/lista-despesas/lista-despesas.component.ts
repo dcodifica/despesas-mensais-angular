@@ -32,8 +32,9 @@ export class ListaDespesasComponent implements OnInit, OnDestroy {
     this.despesasService.trocarStatusDespesa(idDespesa);
   }
 
-  selecionarDespesa(idDespesa: string, radioSelecaoDespesa: HTMLInputElement): void {
-    this.radioDespesaSelecionada = radioSelecaoDespesa;
+  selecionarDespesa(event: MouseEvent, idDespesa: string): void {
+    console.log(event.target);
+    this.radioDespesaSelecionada = <HTMLInputElement>event.target;
     this.idDespesaSelecionada = idDespesa;
   }
 

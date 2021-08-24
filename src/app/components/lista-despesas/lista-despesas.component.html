@@ -1,17 +1,16 @@
 <div class="row">
-    <div class="col-xs-12 col-md-6 titulo-mes-ano">
+    <div class="col-xs-12 titulo-mes-ano">
         <h3>{{ mesAtual }}</h3>
     </div>
 </div>
 <div class="row">
-    <div class="col-xs-12 col-md-6">
+    <div class="col-xs-12">
         <ul class="list-group">
             <li *ngFor="let despesa of despesas"
                 class="list-group-item d-flex justify-content-between align-items-center li-despesa">
                 <div>
-                    <input #radioSelecaoDespesa (click)="selecionarDespesa(despesa.id, radioSelecaoDespesa)"
-                        class="form-check-input pointer" type="radio" name="radio-despesa"
-                        [id]="'radio-selecao-despesa-' + despesa.id">
+                    <input (click)="selecionarDespesa($event, despesa.id)" class="form-check-input pointer" type="radio"
+                        name="radio-despesa" [id]="'radio-selecao-despesa-' + despesa.id">
                     <label class="nome-despesa form-check-label pointer"
                         [for]="'radio-selecao-despesa-' + despesa.id">{{
                         despesa.nome }}
@@ -28,14 +27,14 @@
     </div>
 </div>
 <div class="row" *ngIf="idDespesaSelecionada == ''">
-    <div class="col-xs-12 col-md-6 btn-grupo-acoes">
+    <div class="col-xs-12 btn-grupo-acoes">
         <button class="btn btn-secondary">Novo Ciclo</button> |
         <button class="btn btn-primary" [routerLink]="['/adicionar-despesa']">Nova Despesa</button> |
         <button class="btn btn-primary" disabled>Salvar</button>
     </div>
 </div>
 <div class="row" *ngIf="idDespesaSelecionada != ''">
-    <div class="col-xs-12 col-md-6 btn-grupo-acoes">
+    <div class="col-xs-12 btn-grupo-acoes">
         <button class="btn btn-secondary" (click)="cancelarSelecaoDespesa()">Voltar</button> |
         <button class="btn btn-primary">Editar</button> |
         <button class="btn btn-danger">Excluir</button>
