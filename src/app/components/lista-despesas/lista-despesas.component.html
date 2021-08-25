@@ -2,6 +2,9 @@
 <ul class="list-group">
     <app-despesa-item *ngFor="let despesa of despesas" [despesa]="despesa">
     </app-despesa-item>
+    <li *ngIf="despesas.length == 0" class="list-group-item nenhuma-despesa">
+        Uau! Nenhuma despesa por aqui.
+    </li>
 </ul>
 <div class="btn-grupo-acoes" *ngIf="idDespesaSelecionada == ''">
     <button class="btn btn-outline-secondary">Novo Ciclo</button>
@@ -14,6 +17,8 @@
     <button class="btn btn-outline-secondary" (click)="cancelarSelecaoDespesa()">
         Voltar
     </button>
-    <button class="btn btn-outline-primary">Editar</button>
-    <button class="btn btn-outline-danger">Excluir</button>
+    <button class="btn btn-outline-primary" [routerLink]="['/editar-despesa', idDespesaSelecionada]">
+        Editar
+    </button>
+    <button class="btn btn-outline-danger" (click)="excluirDespesa()">Excluir</button>
 </div>

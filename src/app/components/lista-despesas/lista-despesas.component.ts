@@ -21,10 +21,11 @@ export class ListaDespesasComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.despesas = this.despesasService.getDespesas();
     this.despesasForamAlteradasSubscription =
-      this.despesasService.despesasForamAlteradas
+      this.despesasService.listaDespesaAtualizada
         .subscribe(
           despesas => {
             this.despesas = despesas;
+            this.cancelarSelecaoDespesa();
           }
         );
     this.despesasFoiSelecionadaSubscription =
@@ -41,6 +42,10 @@ export class ListaDespesasComponent implements OnInit, OnDestroy {
   cancelarSelecaoDespesa(): void {
     this.idDespesaSelecionada = '';
     this.radioDespesaSelecionada.checked = false;
+  }
+
+  excluirDespesa() {
+    this.despesasService.excluirDespesa(this.idDespesaSelecionada);
   }
 
   ngOnDestroy(): void {

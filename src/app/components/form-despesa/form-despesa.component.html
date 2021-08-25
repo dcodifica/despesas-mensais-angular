@@ -1,15 +1,16 @@
 <div class="row">
     <div class="col-xs-12">
-        <h1>Incluir Despesa</h1>
+        <h1>{{ titulo }}</h1>
     </div>
 </div>
 <hr>
 <div class="row">
     <div class="col-xs-12">
-        <form #formDespesa="ngForm" (ngSubmit)="onSubmitForm(formDespesa)">
+        <form #formDespesa="ngForm" (ngSubmit)="onSubmitForm()">
             <div class="form-group">
                 <label for="nome">Nome</label>
-                <input id="nome" type="text" class="form-control" ngModel name="nome" #nome="ngModel" required>
+                <input [(ngModel)]="despesa == undefined ? '' : despesa.nome" id="nome" type="text" class="form-control"
+                    name="nome" #nome="ngModel" required>
                 <small id="nome-help" class="form-text text-muted"
                     [ngClass]="{'small-invalid': nome.valid == false && nome.touched == true}">
                     Digite um nome para a nova despesa.
@@ -17,7 +18,8 @@
             </div>
             <div class="form-group margem-superior">
                 <label for="valor">Valor</label>
-                <input id="valor" type="text" class="form-control" ngModel name="valor" #valor="ngModel" required>
+                <input [(ngModel)]="despesa == undefined ? '' : despesa.valor" id="valor" type="text"
+                    class="form-control" name="valor" #valor="ngModel" required>
                 <small id="valor-help" class="form-text text-muted"
                     [ngClass]="{'small-invalid': valor.valid == false && valor.touched == true}">
                     Digite um valor para a nova despesa.
@@ -25,7 +27,8 @@
             </div>
             <div class="form-group margem-superior">
                 <label for="paga">Paga</label>
-                <select id="paga" class="form-control" ngModel name="paga" #paga="ngModel" required>
+                <select id="paga" class="form-control" [(ngModel)]="despesa == undefined ? '' : despesa.paga"
+                    name="paga" #paga="ngModel" required>
                     <option value="false">Não</option>
                     <option value="true">Sim</option>
                 </select>
@@ -36,7 +39,7 @@
             </div>
             <div class="div-btn-acoes margem-superior">
                 <button class="btn btn-primary btn-submit" type="submit"
-                    [disabled]="formDespesa.valid == false">Salvar</button>
+                    [disabled]="formDespesa.valid == false || formDespesa.dirty == false">Salvar</button>
                 <button type="button" class="btn btn-secondary" [routerLink]="['/despesas']">Voltar</button>
             </div>
         </form>

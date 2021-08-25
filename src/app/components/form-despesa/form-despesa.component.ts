@@ -1,7 +1,8 @@
+import { Despesa } from './../../shared/despesa';
 import { DespesasService } from './../../services/despesas.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-form-despesa',
@@ -9,15 +10,35 @@ import { Router } from '@angular/router';
   styleUrls: ['./form-despesa.component.css']
 })
 export class FormDespesaComponent implements OnInit {
+  @ViewChild('formDespesa') formDespesa!: NgForm;
+  titulo: string = 'Incluir Despesa';
+  modoEdicao: boolean = false;
+  despesa!: Despesa;
+
   constructor(
     private despesasService: DespesasService,
-    private router: Router) { }
+    private router: Router,
+    private route: ActivatedRoute) { }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.route.params
+      .subscribe(params => {
+        const idDespesa = params['id'];
+        if (idDespesa != undefined) {
+          this.modoEdicao = true;
+          this.titulo = 'Editar Despesa';
+          this.despesa = this.despesasService.getDespesa(idDespesa);
+        }
+      });
+  }
 
-  onSubmitForm(form: NgForm) {
-    let despesa = form.value;
-    this.despesasService.incluirDespesa(despesa);
+  onSubmitForm() {
+    if (this.modoEdicao == true) {
+      this.despesasService.editarDespesa(this.despesa);
+    } else {
+      this.despesasService
+        .incluirDespesa(this.formDespesa.value);
+    }
     this.router.navigate(['/despesas']);
   }
 }

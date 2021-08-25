@@ -8,8 +8,11 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit, OnDestroy {
-  despesaAdicionada: boolean = false;
+  mostrarAlerta: boolean = false;
   despesaFoiIncluidaSubscription!: Subscription;
+  despesaFoiAlteradaSubscription!: Subscription;
+  despesaFoiExcluidaSubscription!: Subscription;
+  textoAlerta: string = '';
 
   constructor(private despesasService: DespesasService) { }
 
@@ -17,15 +20,30 @@ export class AppComponent implements OnInit, OnDestroy {
     this.despesaFoiIncluidaSubscription =
       this.despesasService.despesaFoiIncluida
         .subscribe(() => {
-          this.despesaAdicionada = true;
+          this.mostrarAlerta = true;
+          this.textoAlerta = 'Despesa incluída com sucesso!'
+        });
+    this.despesaFoiAlteradaSubscription =
+      this.despesasService.despesaFoiAlterada
+        .subscribe(() => {
+          this.mostrarAlerta = true;
+          this.textoAlerta = 'Despesa alterada com sucesso!'
+        });
+    this.despesaFoiExcluidaSubscription =
+      this.despesasService.despesaFoiExcluida
+        .subscribe(() => {
+          this.mostrarAlerta = true;
+          this.textoAlerta = 'Despesa excluída com sucesso!'
         });
   }
 
   ngOnDestroy(): void {
     this.despesaFoiIncluidaSubscription.unsubscribe();
+    this.despesaFoiAlteradaSubscription.unsubscribe();
+    this.despesaFoiExcluidaSubscription.unsubscribe();
   }
 
   ocultarAlertDespesaIncluida(): void {
-    this.despesaAdicionada = false;
+    this.mostrarAlerta = false;
   }
 }
