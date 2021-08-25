@@ -1,0 +1,15 @@
+.div-btn-acoes {
+    text-align: right;
+}
+
+.margem-superior {
+    margin-top: 20px;
+}
+
+.ng-invalid.ng-touched.form-control {
+    border: 1px solid red;
+}
+
+.small-invalid {
+    color: red !important;
+}
