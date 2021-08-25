@@ -10,7 +10,6 @@ import { Subscription } from 'rxjs';
 })
 export class ListaDespesasComponent implements OnInit, OnDestroy {
   despesas!: Despesa[];
-  mesAtual: string = 'SET/2021';
   despesasForamAlteradasSubscription!: Subscription;
   despesasFoiSelecionadaSubscription!: Subscription;
   idDespesaSelecionada: string = '';
@@ -41,7 +40,9 @@ export class ListaDespesasComponent implements OnInit, OnDestroy {
 
   cancelarSelecaoDespesa(): void {
     this.idDespesaSelecionada = '';
-    this.radioDespesaSelecionada.checked = false;
+    if (this.radioDespesaSelecionada != undefined) {
+      this.radioDespesaSelecionada.checked = false;
+    }
   }
 
   excluirDespesa() {

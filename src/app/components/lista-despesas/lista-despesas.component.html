@@ -1,4 +1,5 @@
-<h3 class="titulo-mes-ano">{{ mesAtual }}</h3>
+<h1>Controle Mensal</h1>
+<hr>
 <ul class="list-group">
     <app-despesa-item *ngFor="let despesa of despesas" [despesa]="despesa">
     </app-despesa-item>
@@ -7,7 +8,6 @@
     </li>
 </ul>
 <div class="btn-grupo-acoes" *ngIf="idDespesaSelecionada == ''">
-    <button class="btn btn-outline-secondary">Novo Ciclo</button>
     <button class="btn btn-outline-primary" [routerLink]="['/adicionar-despesa']">
         Nova Despesa
     </button>

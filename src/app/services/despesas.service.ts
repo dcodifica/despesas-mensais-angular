@@ -17,8 +17,8 @@ export class DespesasService {
   despesaFoiExcluida: Subject<void> =
     new Subject<void>();
   private despesas: Despesa[] = [
-    { id: '0', nome: 'Internet', valor: 99.99, paga: false },
-    { id: '1', nome: 'Nubank', valor: 200, paga: false }
+    // { id: '0', nome: 'Internet', valor: 99.99, paga: false },
+    // { id: '1', nome: 'Nubank', valor: 200, paga: false }
   ];
 
   constructor() { }
@@ -55,10 +55,15 @@ export class DespesasService {
 
   gerarIdUnico(): string {
     const indexUltimaDespesa = this.despesas.length - 1;
-    const ultimaDespesaNoCadastro: Despesa =
-      <Despesa>this.despesas[indexUltimaDespesa];
-    const novoId = +ultimaDespesaNoCadastro.id + 1;
-    return novoId.toString();
+    let novoId = 0;
+    if (indexUltimaDespesa == -1) {
+      return novoId.toString();
+    } else {
+      const ultimaDespesaNoCadastro: Despesa =
+        <Despesa>this.despesas[indexUltimaDespesa];
+      novoId = +ultimaDespesaNoCadastro.id + 1;
+      return novoId.toString();
+    }
   }
 
 
