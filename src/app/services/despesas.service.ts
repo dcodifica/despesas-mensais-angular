@@ -17,8 +17,8 @@ export class DespesasService {
   despesaFoiExcluida: Subject<void> =
     new Subject<void>();
   private despesas: Despesa[] = [
-    // { id: '0', nome: 'Internet', valor: 99.99, paga: false },
-    // { id: '1', nome: 'Nubank', valor: 200, paga: false }
+    { id: '0', nome: 'Internet', valor: 124.90, paga: false },
+    { id: '1', nome: 'Nubank', valor: 200, paga: false }
   ];
 
   constructor() { }
