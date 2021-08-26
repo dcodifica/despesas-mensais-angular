@@ -1,6 +1,11 @@
-<h1>Controle Mensal</h1>
+<h1 class="titulo-pagina text-info">Controle Mensal</h1>
 <hr>
-<ul class="list-group">
+<div class="loading-spinner">
+    <span *ngIf="carregando == true" class="spinner-border spinner-border-md text-info" role=" status"
+        aria-hidden="true">
+    </span>
+</div>
+<ul *ngIf="carregando == false" class="list-group">
     <app-despesa-item *ngFor="let despesa of despesas" [despesa]="despesa">
     </app-despesa-item>
     <li *ngIf="despesas.length == 0" class="list-group-item nenhuma-despesa">
@@ -8,7 +13,7 @@
     </li>
 </ul>
 <div class="btn-grupo-acoes" *ngIf="idDespesaSelecionada == ''">
-    <button class="btn btn-outline-primary" [routerLink]="['/adicionar-despesa']">
+    <button *ngIf="carregando == false" class="btn btn-outline-primary" [routerLink]="['/adicionar-despesa']">
         Nova Despesa
     </button>
 </div>

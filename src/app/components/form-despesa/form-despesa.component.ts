@@ -14,6 +14,7 @@ export class FormDespesaComponent implements OnInit {
   titulo: string = 'Incluir Despesa';
   modoEdicao: boolean = false;
   despesa!: Despesa;
+  salvando: boolean = false;
 
   constructor(
     private despesasService: DespesasService,
@@ -33,12 +34,16 @@ export class FormDespesaComponent implements OnInit {
   }
 
   onSubmitForm() {
+    this.salvando = true;
     if (this.modoEdicao == true) {
       this.despesasService.editarDespesa(this.despesa);
     } else {
       this.despesasService
-        .incluirDespesa(this.formDespesa.value);
+        .incluirDespesa(this.formDespesa.value, () => {
+          this.despesasService.notificarDespesaIncluida();
+          this.salvando = false;
+          this.router.navigate(['/despesas']);
+        });
     }
-    this.router.navigate(['/despesas']);
   }
 }

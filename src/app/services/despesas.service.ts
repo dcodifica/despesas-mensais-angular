@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Despesa } from '../shared/despesa';
 
 @Injectable({
@@ -17,15 +18,30 @@ export class DespesasService {
     new Subject<void>();
   despesaFoiExcluida: Subject<void> =
     new Subject<void>();
-  private despesas: Despesa[] = [
-    { id: '0', nome: 'Internet', valor: 124.90, paga: false },
-    { id: '1', nome: 'Nubank', valor: 200, paga: false }
-  ];
+  private firebaseUrl: string =
+    'https://despesas-mensais-angular-default-rtdb.firebaseio.com/despesas.json';
+  private despesas: Despesa[] = [];
 
   constructor(private http: HttpClient) { }
 
-  getDespesas(): Despesa[] {
-    return this.despesas.slice();
+  getDespesas(callback: Function): void {
+    this.http.get<Despesa[]>(this.firebaseUrl)
+      .pipe(map(resposta => {
+        let despesasArray: Despesa[] = [];
+        for (let key in resposta) {
+          despesasArray.push({ ...resposta[key], id: key });
+        }
+        return despesasArray;
+      }))
+      .subscribe(
+        resposta => {
+          this.despesas = resposta;
+          setTimeout(() => {
+            callback();
+            this.notificarAtualizacaoListaDespesas();
+          }, 1000);
+        }
+      );
   }
 
   getDespesa(idDespesa: string): Despesa {
@@ -67,20 +83,25 @@ export class DespesasService {
     }
   }
 
-
-  incluirDespesa(despesa: Despesa): void {
-    despesa.id = this.gerarIdUnico();
-    despesa = this.tratarPropriedadesDespesa(despesa);
-    this.despesas.push(despesa);
-    this.notificarAtualizacaoListaDespesas();
-    this.notificarDespesaIncluida();
+  incluirDespesa(despesa: Despesa, callback: Function): void {
+    const novaDespesa =
+      this.tratarPropriedadesDespesa(despesa);
+    this.http.post(
+      this.firebaseUrl,
+      novaDespesa,
+      { observe: 'response' }
+    ).subscribe(
+      resposta => {
+        console.log(resposta);
+        callback();
+      }
+    );
   }
 
   editarDespesa(despesa: Despesa): void {
     despesa = this.tratarPropriedadesDespesa(despesa);
     const indexDespesa = this.getDespesaIndex(despesa.id);
     this.despesas[indexDespesa] = despesa;
-    this.notificarAtualizacaoListaDespesas();
     this.notificarDespesaAlterada();
   }
 
@@ -90,7 +111,6 @@ export class DespesasService {
         return despesa.id != idDespesa;
       });
     this.despesas = despesas;
-    this.notificarAtualizacaoListaDespesas();
     this.notificarDespesaExcluida();
   }
 
@@ -100,18 +120,21 @@ export class DespesasService {
   }
 
   notificarAtualizacaoListaDespesas(): void {
-    this.listaDespesaAtualizada.next(this.getDespesas());
+    this.listaDespesaAtualizada.next(this.despesas.slice());
   }
 
   notificarDespesaIncluida() {
+    this.notificarAtualizacaoListaDespesas();
     this.despesaFoiIncluida.next();
   }
 
   notificarDespesaAlterada() {
+    this.notificarAtualizacaoListaDespesas();
     this.despesaFoiAlterada.next();
   }
 
   notificarDespesaExcluida() {
+    this.notificarAtualizacaoListaDespesas();
     this.despesaFoiExcluida.next();
   }
 }

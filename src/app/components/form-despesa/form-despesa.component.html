@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-xs-12">
-        <h1>{{ titulo }}</h1>
+        <h1 class="titulo-pagina text-info">{{ titulo }}</h1>
     </div>
 </div>
 <hr>
@@ -39,7 +39,12 @@
             </div>
             <div class="div-btn-acoes margem-superior">
                 <button class="btn btn-outline-primary btn-submit" type="submit"
-                    [disabled]="formDespesa.valid == false || formDespesa.dirty == false">Salvar</button>
+                    [disabled]="formDespesa.valid == false || formDespesa.dirty == false">
+                    <span *ngIf="salvando == true" class="spinner-border spinner-border-sm" role="status"
+                        aria-hidden="true">
+                    </span>
+                    Salvar
+                </button>
                 <button type="button" class="btn btn-outline-secondary" [routerLink]="['/despesas']">Voltar</button>
             </div>
         </form>

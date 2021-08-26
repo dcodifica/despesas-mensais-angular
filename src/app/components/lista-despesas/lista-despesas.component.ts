@@ -9,16 +9,20 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./lista-despesas.component.css']
 })
 export class ListaDespesasComponent implements OnInit, OnDestroy {
-  despesas!: Despesa[];
+  despesas: Despesa[] = [];
   despesasForamAlteradasSubscription!: Subscription;
   despesasFoiSelecionadaSubscription!: Subscription;
   idDespesaSelecionada: string = '';
   radioDespesaSelecionada!: HTMLInputElement;
+  carregando: boolean = false;
 
   constructor(private despesasService: DespesasService) { }
 
   ngOnInit(): void {
-    this.despesas = this.despesasService.getDespesas();
+    this.carregando = true;
+    this.despesasService.getDespesas(() => {
+      this.carregando = false;
+    });
     this.despesasForamAlteradasSubscription =
       this.despesasService.listaDespesaAtualizada
         .subscribe(
