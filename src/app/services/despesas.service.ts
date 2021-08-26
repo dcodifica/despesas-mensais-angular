@@ -10,14 +10,9 @@ import { Despesa } from '../shared/despesa';
 export class DespesasService {
   despesaFoiSelecionada: Subject<HTMLInputElement> =
     new Subject<HTMLInputElement>();
-  listaDespesaAtualizada: Subject<Despesa[]> =
+  listaDespesaFoiAtualizada: Subject<Despesa[]> =
     new Subject<Despesa[]>();
-  despesaFoiIncluida: Subject<void> =
-    new Subject<void>();
-  despesaFoiAlterada: Subject<void> =
-    new Subject<void>();
-  despesaFoiExcluida: Subject<void> =
-    new Subject<void>();
+  despesaFoiModificada: Subject<string> = new Subject<string>();
   private firebaseUrl: string =
     'https://despesas-mensais-angular-default-rtdb.firebaseio.com/despesas.json';
   private despesas: Despesa[] = [];
@@ -36,10 +31,8 @@ export class DespesasService {
       .subscribe(
         resposta => {
           this.despesas = resposta;
-          setTimeout(() => {
-            callback();
-            this.notificarAtualizacaoListaDespesas();
-          }, 1000);
+          callback();
+          this.notificarAtualizacaoListaDespesas();
         }
       );
   }
@@ -70,19 +63,6 @@ export class DespesasService {
     }).indexOf(idDespesa);
   }
 
-  gerarIdUnico(): string {
-    const indexUltimaDespesa = this.despesas.length - 1;
-    let novoId = 0;
-    if (indexUltimaDespesa == -1) {
-      return novoId.toString();
-    } else {
-      const ultimaDespesaNoCadastro: Despesa =
-        <Despesa>this.despesas[indexUltimaDespesa];
-      novoId = +ultimaDespesaNoCadastro.id + 1;
-      return novoId.toString();
-    }
-  }
-
   incluirDespesa(despesa: Despesa, callback: Function): void {
     const novaDespesa =
       this.tratarPropriedadesDespesa(despesa);
@@ -92,7 +72,6 @@ export class DespesasService {
       { observe: 'response' }
     ).subscribe(
       resposta => {
-        console.log(resposta);
         callback();
       }
     );
@@ -102,7 +81,7 @@ export class DespesasService {
     despesa = this.tratarPropriedadesDespesa(despesa);
     const indexDespesa = this.getDespesaIndex(despesa.id);
     this.despesas[indexDespesa] = despesa;
-    this.notificarDespesaAlterada();
+    this.notificarDespesaModificada('ALTERADA');
   }
 
   excluirDespesa(idDespesa: string): void {
@@ -111,7 +90,7 @@ export class DespesasService {
         return despesa.id != idDespesa;
       });
     this.despesas = despesas;
-    this.notificarDespesaExcluida();
+    this.notificarDespesaModificada('EXCLUIDA');
   }
 
   notificarDespesaSelecionada(
@@ -120,21 +99,11 @@ export class DespesasService {
   }
 
   notificarAtualizacaoListaDespesas(): void {
-    this.listaDespesaAtualizada.next(this.despesas.slice());
+    this.listaDespesaFoiAtualizada.next(this.despesas.slice());
   }
 
-  notificarDespesaIncluida() {
+  notificarDespesaModificada(operacao: string) {
     this.notificarAtualizacaoListaDespesas();
-    this.despesaFoiIncluida.next();
-  }
-
-  notificarDespesaAlterada() {
-    this.notificarAtualizacaoListaDespesas();
-    this.despesaFoiAlterada.next();
-  }
-
-  notificarDespesaExcluida() {
-    this.notificarAtualizacaoListaDespesas();
-    this.despesaFoiExcluida.next();
+    this.despesaFoiModificada.next(operacao);
   }
 }

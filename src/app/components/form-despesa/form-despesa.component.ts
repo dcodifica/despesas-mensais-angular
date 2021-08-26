@@ -40,7 +40,7 @@ export class FormDespesaComponent implements OnInit {
     } else {
       this.despesasService
         .incluirDespesa(this.formDespesa.value, () => {
-          this.despesasService.notificarDespesaIncluida();
+          this.despesasService.notificarDespesaModificada('INCLUIDA');
           this.salvando = false;
           this.router.navigate(['/despesas']);
         });

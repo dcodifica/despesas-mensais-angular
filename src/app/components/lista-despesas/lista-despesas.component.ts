@@ -19,27 +19,11 @@ export class ListaDespesasComponent implements OnInit, OnDestroy {
   constructor(private despesasService: DespesasService) { }
 
   ngOnInit(): void {
+    this.criarSubscriptions();
     this.carregando = true;
     this.despesasService.getDespesas(() => {
       this.carregando = false;
     });
-    this.despesasForamAlteradasSubscription =
-      this.despesasService.listaDespesaAtualizada
-        .subscribe(
-          despesas => {
-            this.despesas = despesas;
-            this.cancelarSelecaoDespesa();
-          }
-        );
-    this.despesasFoiSelecionadaSubscription =
-      this.despesasService.despesaFoiSelecionada
-        .subscribe(
-          radioDespesaSelecionada => {
-            this.idDespesaSelecionada =
-              <string>radioDespesaSelecionada.id.split('-').pop();
-            this.radioDespesaSelecionada = radioDespesaSelecionada;
-          }
-        );
   }
 
   cancelarSelecaoDespesa(): void {
@@ -51,6 +35,25 @@ export class ListaDespesasComponent implements OnInit, OnDestroy {
 
   excluirDespesa() {
     this.despesasService.excluirDespesa(this.idDespesaSelecionada);
+  }
+
+  criarSubscriptions(): void {
+    this.despesasForamAlteradasSubscription =
+      this.despesasService.listaDespesaFoiAtualizada
+        .subscribe(
+          despesas => {
+            this.despesas = despesas;
+            this.cancelarSelecaoDespesa();
+          }
+        );
+    this.despesasFoiSelecionadaSubscription =
+      this.despesasService.despesaFoiSelecionada
+        .subscribe(
+          radioDespesaSelecionada => {
+            this.idDespesaSelecionada = radioDespesaSelecionada.id;
+            this.radioDespesaSelecionada = radioDespesaSelecionada;
+          }
+        );
   }
 
   ngOnDestroy(): void {

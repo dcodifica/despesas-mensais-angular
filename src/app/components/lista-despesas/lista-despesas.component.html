@@ -13,7 +13,7 @@
     </li>
 </ul>
 <div class="btn-grupo-acoes" *ngIf="idDespesaSelecionada == ''">
-    <button *ngIf="carregando == false" class="btn btn-outline-primary" [routerLink]="['/adicionar-despesa']">
+    <button *ngIf="carregando == false" class="btn btn-outline-info" [routerLink]="['/adicionar-despesa']">
         Nova Despesa
     </button>
 </div>
@@ -21,7 +21,7 @@
     <button class="btn btn-outline-secondary" (click)="cancelarSelecaoDespesa()">
         Voltar
     </button>
-    <button class="btn btn-outline-primary" [routerLink]="['/editar-despesa', idDespesaSelecionada]">
+    <button class="btn btn-outline-info" [routerLink]="['/editar-despesa', idDespesaSelecionada]">
         Editar
     </button>
     <button class="btn btn-outline-danger" (click)="excluirDespesa()">Excluir</button>

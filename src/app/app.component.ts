@@ -18,22 +18,18 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.despesaFoiIncluidaSubscription =
-      this.despesasService.despesaFoiIncluida
-        .subscribe(() => {
-          this.mostrarAlerta = true;
-          this.textoAlerta = 'Despesa incluída com sucesso!'
-        });
-    this.despesaFoiAlteradaSubscription =
-      this.despesasService.despesaFoiAlterada
-        .subscribe(() => {
-          this.mostrarAlerta = true;
-          this.textoAlerta = 'Despesa alterada com sucesso!'
-        });
-    this.despesaFoiExcluidaSubscription =
-      this.despesasService.despesaFoiExcluida
-        .subscribe(() => {
-          this.mostrarAlerta = true;
-          this.textoAlerta = 'Despesa excluída com sucesso!'
+      this.despesasService.despesaFoiModificada
+        .subscribe((operacao) => {
+          if (operacao == 'INCLUIDA') {
+            this.mostrarAlerta = true;
+            this.textoAlerta = 'Despesa incluída com sucesso!'
+          } else if (operacao == 'ALTERADA') {
+            this.mostrarAlerta = true;
+            this.textoAlerta = 'Despesa alterada com sucesso!'
+          } else if (operacao == 'EXCLUIDA') {
+            this.mostrarAlerta = true;
+            this.textoAlerta = 'Despesa excluída com sucesso!'
+          }
         });
   }
 
