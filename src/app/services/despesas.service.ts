@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Despesa } from '../shared/despesa';
@@ -21,7 +22,7 @@ export class DespesasService {
     { id: '1', nome: 'Nubank', valor: 200, paga: false }
   ];
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
   getDespesas(): Despesa[] {
     return this.despesas.slice();
