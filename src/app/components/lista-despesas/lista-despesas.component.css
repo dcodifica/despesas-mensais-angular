@@ -6,3 +6,11 @@
 .nenhuma-despesa {
     text-align: center;
 }
+
+.loading-spinner {
+    text-align: center;
+}
+
+.erro-carregar {
+    border-color: red;
+}

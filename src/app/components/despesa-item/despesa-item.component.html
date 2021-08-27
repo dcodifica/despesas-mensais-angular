@@ -2,9 +2,9 @@
     justify-content-between 
     align-items-center li-despesa">
     <div>
-        <input class="form-check-input pointer" (click)="selecionarDespesa($event)"
-            [id]="'rd-selecao-despesa-' + despesa.id" type="radio" name="rd-despesa">
-        <label class="nome-despesa form-check-label pointer" [for]="'rd-selecao-despesa-' + despesa.id">
+        <input class="form-check-input pointer" (click)="selecionarDespesa($event)" [id]="despesa.id" type="radio"
+            name="rd-despesa">
+        <label class="nome-despesa form-check-label pointer" [for]="despesa.id">
             {{ despesa.nome }}
         </label>
     </div>

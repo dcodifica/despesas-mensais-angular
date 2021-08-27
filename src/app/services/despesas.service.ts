@@ -1,5 +1,7 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Observable, Subject, throwError } from 'rxjs';
+import { map, tap, catchError } from 'rxjs/operators';
 import { Despesa } from '../shared/despesa';
 
 @Injectable({
@@ -8,23 +10,33 @@ import { Despesa } from '../shared/despesa';
 export class DespesasService {
   despesaFoiSelecionada: Subject<HTMLInputElement> =
     new Subject<HTMLInputElement>();
-  listaDespesaAtualizada: Subject<Despesa[]> =
+  listaDespesaFoiAtualizada: Subject<Despesa[]> =
     new Subject<Despesa[]>();
-  despesaFoiIncluida: Subject<void> =
-    new Subject<void>();
-  despesaFoiAlterada: Subject<void> =
-    new Subject<void>();
-  despesaFoiExcluida: Subject<void> =
-    new Subject<void>();
-  private despesas: Despesa[] = [
-    { id: '0', nome: 'Internet', valor: 124.90, paga: false },
-    { id: '1', nome: 'Nubank', valor: 200, paga: false }
-  ];
+  despesaFoiModificada: Subject<string> = new Subject<string>();
+  private firebaseUrl: string =
+    'https://despesas-mensais-angular-default-rtdb.firebaseio.com/';
+  private despesas: Despesa[] = [];
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
-  getDespesas(): Despesa[] {
-    return this.despesas.slice();
+  getDespesas(): Observable<Despesa[]> {
+    return this.http.get<Despesa[]>(this.firebaseUrl + 'despesas.json')
+      .pipe(
+        map(resposta => {
+          let despesasArray: Despesa[] = [];
+          for (let key in resposta) {
+            despesasArray.push({ ...resposta[key], id: key });
+          }
+          return despesasArray;
+        }),
+        tap((resposta) => {
+          this.despesas = resposta;
+          this.notificarAtualizacaoListaDespesas();
+        }),
+        catchError(erro => {
+          return throwError('Erro ao carregar despesas: ' +
+            erro.statusText + '!');
+        }));
   }
 
   getDespesa(idDespesa: string): Despesa {
@@ -34,14 +46,14 @@ export class DespesasService {
       })[0];
   }
 
-  trocarStatusDespesa(idDespesa: string): void {
+  trocarStatusDespesa(idDespesa: string): Observable<any> {
     const indexDespesa = this.getDespesaIndex(idDespesa);
     this.despesas[indexDespesa].paga =
       !this.despesas[indexDespesa].paga;
-    this.notificarAtualizacaoListaDespesas();
+    return this.editarDespesa(this.despesas[indexDespesa]);
   }
 
-  tratarPropriedadesDespesa(despesa: Despesa): Despesa {
+  tratarDespesa(despesa: Despesa): Despesa {
     despesa.valor = +despesa.valor;
     despesa.paga = despesa.paga.toString() == 'true';
     return despesa;
@@ -53,44 +65,52 @@ export class DespesasService {
     }).indexOf(idDespesa);
   }
 
-  gerarIdUnico(): string {
-    const indexUltimaDespesa = this.despesas.length - 1;
-    let novoId = 0;
-    if (indexUltimaDespesa == -1) {
-      return novoId.toString();
-    } else {
-      const ultimaDespesaNoCadastro: Despesa =
-        <Despesa>this.despesas[indexUltimaDespesa];
-      novoId = +ultimaDespesaNoCadastro.id + 1;
-      return novoId.toString();
-    }
+  incluirDespesa(despesa: Despesa): Observable<{ name: string }> {
+    const novaDespesa = this.tratarDespesa(despesa);
+    return this.http.post<{ name: string }>(
+      this.firebaseUrl + 'despesas.json',
+      novaDespesa,
+    ).pipe(
+      tap(() => {
+        this.notificarDespesaModificada('INCLUIDA');
+      }),
+      catchError(erro => {
+        return throwError('Erro ao salvar despesa: ' + erro.statusText + '!');
+      })
+    );
   }
 
-
-  incluirDespesa(despesa: Despesa): void {
-    despesa.id = this.gerarIdUnico();
-    despesa = this.tratarPropriedadesDespesa(despesa);
-    this.despesas.push(despesa);
-    this.notificarAtualizacaoListaDespesas();
-    this.notificarDespesaIncluida();
+  editarDespesa(despesa: Despesa): Observable<any> {
+    const despesaEditada = this.tratarDespesa(despesa);
+    return this.http.patch(
+      this.firebaseUrl + 'despesas/' + despesaEditada.id + '.json',
+      despesaEditada
+    ).pipe(
+      tap(() => {
+        this.notificarDespesaModificada('ALTERADA');
+      }),
+      catchError(erro => {
+        return throwError('Erro ao editar despesa: ' + erro.statusText + '!');
+      })
+    );
   }
 
-  editarDespesa(despesa: Despesa): void {
-    despesa = this.tratarPropriedadesDespesa(despesa);
-    const indexDespesa = this.getDespesaIndex(despesa.id);
-    this.despesas[indexDespesa] = despesa;
-    this.notificarAtualizacaoListaDespesas();
-    this.notificarDespesaAlterada();
-  }
-
-  excluirDespesa(idDespesa: string): void {
-    const despesas =
-      this.despesas.filter(despesa => {
-        return despesa.id != idDespesa;
-      });
-    this.despesas = despesas;
-    this.notificarAtualizacaoListaDespesas();
-    this.notificarDespesaExcluida();
+  excluirDespesa(idDespesa: string): Observable<any> {
+    return this.http.delete(
+      this.firebaseUrl + 'despesas/' + idDespesa + '.json'
+    ).pipe(
+      tap(() => {
+        const despesas =
+          this.despesas.filter(despesa => {
+            return despesa.id != idDespesa;
+          });
+        this.despesas = despesas;
+        this.notificarDespesaModificada('EXCLUIDA');
+      }),
+      catchError(erro => {
+        return throwError('Erro ao excluir despesa!');
+      })
+    );
   }
 
   notificarDespesaSelecionada(
@@ -99,18 +119,11 @@ export class DespesasService {
   }
 
   notificarAtualizacaoListaDespesas(): void {
-    this.listaDespesaAtualizada.next(this.getDespesas());
+    this.listaDespesaFoiAtualizada.next(this.despesas.slice());
   }
 
-  notificarDespesaIncluida() {
-    this.despesaFoiIncluida.next();
-  }
-
-  notificarDespesaAlterada() {
-    this.despesaFoiAlterada.next();
-  }
-
-  notificarDespesaExcluida() {
-    this.despesaFoiExcluida.next();
+  notificarDespesaModificada(operacao: string) {
+    this.notificarAtualizacaoListaDespesas();
+    this.despesaFoiModificada.next(operacao);
   }
 }

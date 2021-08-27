@@ -15,7 +15,9 @@ export class DespesaItemComponent implements OnInit {
   ngOnInit(): void { }
 
   trocarStatusDespesa(idDespesa: string): void {
-    this.despesasService.trocarStatusDespesa(idDespesa);
+    this.despesasService
+      .trocarStatusDespesa(idDespesa)
+      .subscribe();
   }
 
   selecionarDespesa(event: MouseEvent): void {

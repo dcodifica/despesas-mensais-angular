@@ -9,33 +9,20 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./lista-despesas.component.css']
 })
 export class ListaDespesasComponent implements OnInit, OnDestroy {
-  despesas!: Despesa[];
+  despesas: Despesa[] = [];
   despesasForamAlteradasSubscription!: Subscription;
   despesasFoiSelecionadaSubscription!: Subscription;
   idDespesaSelecionada: string = '';
   radioDespesaSelecionada!: HTMLInputElement;
+  carregando: boolean = false;
+  erroCarregarDespesas: boolean = false;
+  textoErro: string = '';
 
   constructor(private despesasService: DespesasService) { }
 
   ngOnInit(): void {
-    this.despesas = this.despesasService.getDespesas();
-    this.despesasForamAlteradasSubscription =
-      this.despesasService.listaDespesaAtualizada
-        .subscribe(
-          despesas => {
-            this.despesas = despesas;
-            this.cancelarSelecaoDespesa();
-          }
-        );
-    this.despesasFoiSelecionadaSubscription =
-      this.despesasService.despesaFoiSelecionada
-        .subscribe(
-          radioDespesaSelecionada => {
-            this.idDespesaSelecionada =
-              <string>radioDespesaSelecionada.id.split('-').pop();
-            this.radioDespesaSelecionada = radioDespesaSelecionada;
-          }
-        );
+    this.criarSubscriptions();
+    this.carregando = true;
   }
 
   cancelarSelecaoDespesa(): void {
@@ -46,7 +33,43 @@ export class ListaDespesasComponent implements OnInit, OnDestroy {
   }
 
   excluirDespesa() {
-    this.despesasService.excluirDespesa(this.idDespesaSelecionada);
+    this.despesasService
+      .excluirDespesa(this.idDespesaSelecionada)
+      .subscribe();
+  }
+
+  criarSubscriptions(): void {
+    this.despesasService.getDespesas()
+      .subscribe(
+        resposta => {
+          this.carregando = false;
+        },
+        erro => {
+          this.carregando = false;
+          this.erroCarregarDespesas = true;
+          this.textoErro = erro;
+        }
+      );
+    this.despesasForamAlteradasSubscription =
+      this.despesasService
+        .listaDespesaFoiAtualizada
+        .subscribe(
+          despesas => {
+            this.despesas = despesas;
+            this.cancelarSelecaoDespesa();
+          }
+        );
+    this.despesasFoiSelecionadaSubscription =
+      this.despesasService
+        .despesaFoiSelecionada
+        .subscribe(
+          radioDespesaSelecionada => {
+            this.idDespesaSelecionada =
+              radioDespesaSelecionada.id;
+            this.radioDespesaSelecionada =
+              radioDespesaSelecionada;
+          }
+        );
   }
 
   ngOnDestroy(): void {
