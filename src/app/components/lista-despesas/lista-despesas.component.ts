@@ -15,15 +15,14 @@ export class ListaDespesasComponent implements OnInit, OnDestroy {
   idDespesaSelecionada: string = '';
   radioDespesaSelecionada!: HTMLInputElement;
   carregando: boolean = false;
+  erroCarregarDespesas: boolean = false;
+  textoErro: string = '';
 
   constructor(private despesasService: DespesasService) { }
 
   ngOnInit(): void {
     this.criarSubscriptions();
     this.carregando = true;
-    this.despesasService.getDespesas(() => {
-      this.carregando = false;
-    });
   }
 
   cancelarSelecaoDespesa(): void {
@@ -34,12 +33,26 @@ export class ListaDespesasComponent implements OnInit, OnDestroy {
   }
 
   excluirDespesa() {
-    this.despesasService.excluirDespesa(this.idDespesaSelecionada);
+    this.despesasService
+      .excluirDespesa(this.idDespesaSelecionada)
+      .subscribe();
   }
 
   criarSubscriptions(): void {
+    this.despesasService.getDespesas()
+      .subscribe(
+        resposta => {
+          this.carregando = false;
+        },
+        erro => {
+          this.carregando = false;
+          this.erroCarregarDespesas = true;
+          this.textoErro = erro;
+        }
+      );
     this.despesasForamAlteradasSubscription =
-      this.despesasService.listaDespesaFoiAtualizada
+      this.despesasService
+        .listaDespesaFoiAtualizada
         .subscribe(
           despesas => {
             this.despesas = despesas;
@@ -47,11 +60,14 @@ export class ListaDespesasComponent implements OnInit, OnDestroy {
           }
         );
     this.despesasFoiSelecionadaSubscription =
-      this.despesasService.despesaFoiSelecionada
+      this.despesasService
+        .despesaFoiSelecionada
         .subscribe(
           radioDespesaSelecionada => {
-            this.idDespesaSelecionada = radioDespesaSelecionada.id;
-            this.radioDespesaSelecionada = radioDespesaSelecionada;
+            this.idDespesaSelecionada =
+              radioDespesaSelecionada.id;
+            this.radioDespesaSelecionada =
+              radioDespesaSelecionada;
           }
         );
   }

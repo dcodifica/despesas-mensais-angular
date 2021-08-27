@@ -15,6 +15,8 @@ export class FormDespesaComponent implements OnInit {
   modoEdicao: boolean = false;
   despesa!: Despesa;
   salvando: boolean = false;
+  mostraAlerta: boolean = false;
+  textoAlerta: string = '';
 
   constructor(
     private despesasService: DespesasService,
@@ -33,17 +35,40 @@ export class FormDespesaComponent implements OnInit {
       });
   }
 
+  ocultarAlerta(): void {
+    this.mostraAlerta = false;
+  }
+
   onSubmitForm() {
     this.salvando = true;
     if (this.modoEdicao == true) {
-      this.despesasService.editarDespesa(this.despesa);
+      this.despesasService
+        .editarDespesa(this.despesa)
+        .subscribe(
+          resposta => {
+            this.salvando = false;
+            this.router.navigate(['/despesas']);
+          },
+          erro => {
+            this.salvando = false;
+            this.mostraAlerta = true;
+            this.textoAlerta = erro;
+          }
+        );
     } else {
       this.despesasService
-        .incluirDespesa(this.formDespesa.value, () => {
-          this.despesasService.notificarDespesaModificada('INCLUIDA');
-          this.salvando = false;
-          this.router.navigate(['/despesas']);
-        });
+        .incluirDespesa(this.formDespesa.value)
+        .subscribe(
+          resposta => {
+            this.salvando = false;
+            this.router.navigate(['/despesas']);
+          },
+          erro => {
+            this.salvando = false;
+            this.mostraAlerta = true;
+            this.textoAlerta = erro;
+          }
+        );
     }
   }
 }

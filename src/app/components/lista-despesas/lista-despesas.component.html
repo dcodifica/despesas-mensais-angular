@@ -8,12 +8,16 @@
 <ul *ngIf="carregando == false" class="list-group">
     <app-despesa-item *ngFor="let despesa of despesas" [despesa]="despesa">
     </app-despesa-item>
-    <li *ngIf="despesas.length == 0" class="list-group-item nenhuma-despesa">
+    <li *ngIf="despesas.length == 0 && erroCarregarDespesas == false" class="list-group-item nenhuma-despesa">
         Uau! Nenhuma despesa por aqui.
+    </li>
+    <li *ngIf="erroCarregarDespesas == true" class="list-group-item nenhuma-despesa erro-carregar text-danger">
+        {{ textoErro }}
     </li>
 </ul>
 <div class="btn-grupo-acoes" *ngIf="idDespesaSelecionada == ''">
-    <button *ngIf="carregando == false" class="btn btn-outline-info" [routerLink]="['/adicionar-despesa']">
+    <button *ngIf="carregando == false && erroCarregarDespesas == false" class="btn btn-outline-info"
+        [routerLink]="['/adicionar-despesa']">
         Nova Despesa
     </button>
 </div>

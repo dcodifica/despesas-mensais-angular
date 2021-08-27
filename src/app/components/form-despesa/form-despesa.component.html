@@ -4,13 +4,16 @@
     </div>
 </div>
 <hr>
+<div (click)="ocultarAlerta()" *ngIf="mostraAlerta == true" class="alert alert-danger" role="alert">
+    {{ textoAlerta }}
+</div>
 <div class="row">
     <div class="col-xs-12">
         <form #formDespesa="ngForm" (ngSubmit)="onSubmitForm()">
             <div class="form-group">
                 <label for="nome">Nome</label>
-                <input [(ngModel)]="despesa == undefined ? '' : despesa.nome" id="nome" type="text" class="form-control"
-                    name="nome" #nome="ngModel" required>
+                <input [(ngModel)]="despesa == undefined ? '' : despesa.nome" id="nome" autocomplete="off" type="text"
+                    class="form-control" name="nome" #nome="ngModel" required>
                 <small id="nome-help" class="form-text text-muted"
                     [ngClass]="{'small-invalid': nome.valid == false && nome.touched == true}">
                     Digite um nome para a nova despesa.
@@ -18,7 +21,7 @@
             </div>
             <div class="form-group margem-superior">
                 <label for="valor">Valor</label>
-                <input [(ngModel)]="despesa == undefined ? '' : despesa.valor" id="valor" type="text"
+                <input [(ngModel)]="despesa == undefined ? '' : despesa.valor" id="valor" autocomplete="off" type="text"
                     class="form-control" name="valor" #valor="ngModel" required>
                 <small id="valor-help" class="form-text text-muted"
                     [ngClass]="{'small-invalid': valor.valid == false && valor.touched == true}">

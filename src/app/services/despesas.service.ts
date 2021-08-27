@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, Subject, throwError } from 'rxjs';
+import { map, tap, catchError } from 'rxjs/operators';
 import { Despesa } from '../shared/despesa';
 
 @Injectable({
@@ -14,27 +14,29 @@ export class DespesasService {
     new Subject<Despesa[]>();
   despesaFoiModificada: Subject<string> = new Subject<string>();
   private firebaseUrl: string =
-    'https://despesas-mensais-angular-default-rtdb.firebaseio.com/despesas.json';
+    'https://despesas-mensais-angular-default-rtdb.firebaseio.com/';
   private despesas: Despesa[] = [];
 
   constructor(private http: HttpClient) { }
 
-  getDespesas(callback: Function): void {
-    this.http.get<Despesa[]>(this.firebaseUrl)
-      .pipe(map(resposta => {
-        let despesasArray: Despesa[] = [];
-        for (let key in resposta) {
-          despesasArray.push({ ...resposta[key], id: key });
-        }
-        return despesasArray;
-      }))
-      .subscribe(
-        resposta => {
+  getDespesas(): Observable<Despesa[]> {
+    return this.http.get<Despesa[]>(this.firebaseUrl + 'despesas.json')
+      .pipe(
+        map(resposta => {
+          let despesasArray: Despesa[] = [];
+          for (let key in resposta) {
+            despesasArray.push({ ...resposta[key], id: key });
+          }
+          return despesasArray;
+        }),
+        tap((resposta) => {
           this.despesas = resposta;
-          callback();
           this.notificarAtualizacaoListaDespesas();
-        }
-      );
+        }),
+        catchError(erro => {
+          return throwError('Erro ao carregar despesas: ' +
+            erro.statusText + '!');
+        }));
   }
 
   getDespesa(idDespesa: string): Despesa {
@@ -44,14 +46,14 @@ export class DespesasService {
       })[0];
   }
 
-  trocarStatusDespesa(idDespesa: string): void {
+  trocarStatusDespesa(idDespesa: string): Observable<any> {
     const indexDespesa = this.getDespesaIndex(idDespesa);
     this.despesas[indexDespesa].paga =
       !this.despesas[indexDespesa].paga;
-    this.notificarAtualizacaoListaDespesas();
+    return this.editarDespesa(this.despesas[indexDespesa]);
   }
 
-  tratarPropriedadesDespesa(despesa: Despesa): Despesa {
+  tratarDespesa(despesa: Despesa): Despesa {
     despesa.valor = +despesa.valor;
     despesa.paga = despesa.paga.toString() == 'true';
     return despesa;
@@ -63,34 +65,52 @@ export class DespesasService {
     }).indexOf(idDespesa);
   }
 
-  incluirDespesa(despesa: Despesa, callback: Function): void {
-    const novaDespesa =
-      this.tratarPropriedadesDespesa(despesa);
-    this.http.post(
-      this.firebaseUrl,
+  incluirDespesa(despesa: Despesa): Observable<{ name: string }> {
+    const novaDespesa = this.tratarDespesa(despesa);
+    return this.http.post<{ name: string }>(
+      this.firebaseUrl + 'despesas.json',
       novaDespesa,
-      { observe: 'response' }
-    ).subscribe(
-      resposta => {
-        callback();
-      }
+    ).pipe(
+      tap(() => {
+        this.notificarDespesaModificada('INCLUIDA');
+      }),
+      catchError(erro => {
+        return throwError('Erro ao salvar despesa: ' + erro.statusText + '!');
+      })
     );
   }
 
-  editarDespesa(despesa: Despesa): void {
-    despesa = this.tratarPropriedadesDespesa(despesa);
-    const indexDespesa = this.getDespesaIndex(despesa.id);
-    this.despesas[indexDespesa] = despesa;
-    this.notificarDespesaModificada('ALTERADA');
+  editarDespesa(despesa: Despesa): Observable<any> {
+    const despesaEditada = this.tratarDespesa(despesa);
+    return this.http.patch(
+      this.firebaseUrl + 'despesas/' + despesaEditada.id + '.json',
+      despesaEditada
+    ).pipe(
+      tap(() => {
+        this.notificarDespesaModificada('ALTERADA');
+      }),
+      catchError(erro => {
+        return throwError('Erro ao editar despesa: ' + erro.statusText + '!');
+      })
+    );
   }
 
-  excluirDespesa(idDespesa: string): void {
-    const despesas =
-      this.despesas.filter(despesa => {
-        return despesa.id != idDespesa;
-      });
-    this.despesas = despesas;
-    this.notificarDespesaModificada('EXCLUIDA');
+  excluirDespesa(idDespesa: string): Observable<any> {
+    return this.http.delete(
+      this.firebaseUrl + 'despesas/' + idDespesa + '.json'
+    ).pipe(
+      tap(() => {
+        const despesas =
+          this.despesas.filter(despesa => {
+            return despesa.id != idDespesa;
+          });
+        this.despesas = despesas;
+        this.notificarDespesaModificada('EXCLUIDA');
+      }),
+      catchError(erro => {
+        return throwError('Erro ao excluir despesa!');
+      })
+    );
   }
 
   notificarDespesaSelecionada(

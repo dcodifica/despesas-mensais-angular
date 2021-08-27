@@ -10,3 +10,7 @@
 .loading-spinner {
     text-align: center;
 }
+
+.erro-carregar {
+    border-color: red;
+}

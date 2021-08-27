@@ -8,38 +8,35 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit, OnDestroy {
-  mostrarAlerta: boolean = false;
-  despesaFoiIncluidaSubscription!: Subscription;
-  despesaFoiAlteradaSubscription!: Subscription;
-  despesaFoiExcluidaSubscription!: Subscription;
+  mostraAlerta: boolean = false;
+  despesaFoiModificada!: Subscription;
   textoAlerta: string = '';
+  tipoAlerta: string = 'success';
 
   constructor(private despesasService: DespesasService) { }
 
   ngOnInit(): void {
-    this.despesaFoiIncluidaSubscription =
-      this.despesasService.despesaFoiModificada
-        .subscribe((operacao) => {
-          if (operacao == 'INCLUIDA') {
-            this.mostrarAlerta = true;
-            this.textoAlerta = 'Despesa incluída com sucesso!'
-          } else if (operacao == 'ALTERADA') {
-            this.mostrarAlerta = true;
-            this.textoAlerta = 'Despesa alterada com sucesso!'
-          } else if (operacao == 'EXCLUIDA') {
-            this.mostrarAlerta = true;
-            this.textoAlerta = 'Despesa excluída com sucesso!'
-          }
-        });
+    this.despesaFoiModificada = this.despesasService
+      .despesaFoiModificada
+      .subscribe((operacao) => {
+        if (operacao == 'INCLUIDA') {
+          this.mostraAlerta = true;
+          this.textoAlerta = 'Despesa incluída com sucesso!'
+        } else if (operacao == 'ALTERADA') {
+          this.mostraAlerta = true;
+          this.textoAlerta = 'Despesa alterada com sucesso!'
+        } else if (operacao == 'EXCLUIDA') {
+          this.mostraAlerta = true;
+          this.textoAlerta = 'Despesa excluída com sucesso!'
+        }
+      });
   }
 
   ngOnDestroy(): void {
-    this.despesaFoiIncluidaSubscription.unsubscribe();
-    this.despesaFoiAlteradaSubscription.unsubscribe();
-    this.despesaFoiExcluidaSubscription.unsubscribe();
+    this.despesaFoiModificada.unsubscribe();
   }
 
-  ocultarAlertDespesaIncluida(): void {
-    this.mostrarAlerta = false;
+  ocultarAlerta(): void {
+    this.mostraAlerta = false;
   }
 }
