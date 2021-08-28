@@ -22,7 +22,6 @@ export class ListaDespesasComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.criarSubscriptions();
-    this.carregando = true;
   }
 
   cancelarSelecaoDespesa(): void {
@@ -39,6 +38,7 @@ export class ListaDespesasComponent implements OnInit, OnDestroy {
   }
 
   criarSubscriptions(): void {
+    this.carregando = true;
     this.despesasService.getDespesas()
       .subscribe(
         resposta => {

@@ -41,8 +41,8 @@
                 </small>
             </div>
             <div class="div-btn-acoes margem-superior">
-                <button class="btn btn-outline-primary btn-submit" type="submit"
-                    [disabled]="formDespesa.valid == false || formDespesa.dirty == false">
+                <button class="btn btn-outline-info btn-submit" type="submit"
+                    [disabled]="formDespesa.valid == false || formDespesa.dirty == false || salvando == true">
                     <span *ngIf="salvando == true" class="spinner-border spinner-border-sm" role="status"
                         aria-hidden="true">
                     </span>
