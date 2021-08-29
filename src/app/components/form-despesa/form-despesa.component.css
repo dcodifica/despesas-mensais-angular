@@ -7,9 +7,9 @@
 }
 
 .ng-invalid.ng-touched.form-control {
-    border: 1px solid red;
+    border: 1px solid #f18690;
 }
 
 .small-invalid {
-    color: red !important;
+    color: #f18690 !important;
 }

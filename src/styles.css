@@ -1,3 +1,30 @@
 .btn {
     margin-left: 7px;
 }
+
+.titulo-pagina {
+    text-align: center;
+}
+
+.alert {
+    cursor: pointer;
+}
+
+.alert-success {
+    color: #2dbf7a;
+}
+
+.alert-danger, .erro-carregar {
+    color: #f18690;
+}
+
+.alert-success, .alert-danger, .erro-carregar {
+    text-align: center;
+    border: none;
+    letter-spacing: 4px;
+    font-weight: bold;
+}
+
+.btn-info:hover, .btn-info:disabled, .btn-info {
+    color: #fff;
+}

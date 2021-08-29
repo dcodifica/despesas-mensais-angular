@@ -3,7 +3,7 @@
 </nav>
 <div class="container">
   <div (click)="ocultarAlerta()" *ngIf="mostraAlerta == true" class="alert alert-success" role="alert">
-    {{ textoAlerta }}
+    {{ textoAlerta | uppercase }}
   </div>
   <router-outlet></router-outlet>
 </div>

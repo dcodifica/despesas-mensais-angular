@@ -3,14 +3,10 @@
     text-align: center;
 }
 
-.nenhuma-despesa {
-    text-align: center;
-}
-
 .loading-spinner {
     text-align: center;
 }
 
-.erro-carregar {
-    border-color: red;
+.alert-erro-carregar-despesas {
+    cursor: default;
 }

@@ -17,6 +17,7 @@ export class ListaDespesasComponent implements OnInit, OnDestroy {
   carregando: boolean = false;
   erroCarregarDespesas: boolean = false;
   textoErro: string = '';
+  valorTotalDespesas: number = 0;
 
   constructor(private despesasService: DespesasService) { }
 
@@ -56,6 +57,8 @@ export class ListaDespesasComponent implements OnInit, OnDestroy {
         .subscribe(
           despesas => {
             this.despesas = despesas;
+            this.valorTotalDespesas =
+              this.despesasService.getValorTotalDespesas();
             this.cancelarSelecaoDespesa();
           }
         );

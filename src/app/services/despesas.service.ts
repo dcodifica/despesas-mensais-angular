@@ -35,7 +35,7 @@ export class DespesasService {
         }),
         catchError(erro => {
           return throwError('Erro ao carregar despesas: ' +
-            erro.statusText + '!');
+            erro.statusText);
         }));
   }
 
@@ -44,6 +44,14 @@ export class DespesasService {
       despesa => {
         return despesa.id == idDespesa;
       })[0];
+  }
+
+  getValorTotalDespesas(): number {
+    let total = 0;
+    for (const despesa of this.despesas) {
+      total += despesa.valor;
+    }
+    return total;
   }
 
   trocarStatusDespesa(idDespesa: string): Observable<any> {
@@ -72,10 +80,11 @@ export class DespesasService {
       novaDespesa,
     ).pipe(
       tap(() => {
-        this.notificarDespesaModificada('INCLUIDA');
+        this.notificarDespesaModificada('adicionada');
       }),
       catchError(erro => {
-        return throwError('Erro ao salvar despesa: ' + erro.statusText + '!');
+        return throwError('Erro ao salvar despesa: '
+          + erro.statusText);
       })
     );
   }
@@ -87,10 +96,11 @@ export class DespesasService {
       despesaEditada
     ).pipe(
       tap(() => {
-        this.notificarDespesaModificada('ALTERADA');
+        this.notificarDespesaModificada('alterada');
       }),
       catchError(erro => {
-        return throwError('Erro ao editar despesa: ' + erro.statusText + '!');
+        return throwError('Erro ao editar despesa: '
+          + erro.statusText);
       })
     );
   }
@@ -105,21 +115,23 @@ export class DespesasService {
             return despesa.id != idDespesa;
           });
         this.despesas = despesas;
-        this.notificarDespesaModificada('EXCLUIDA');
+        this.notificarDespesaModificada('removida');
       }),
       catchError(erro => {
-        return throwError('Erro ao excluir despesa!');
+        return throwError('Erro ao excluir despesa');
       })
     );
   }
 
   notificarDespesaSelecionada(
     radioDespesaSelecionada: HTMLInputElement): void {
-    this.despesaFoiSelecionada.next(radioDespesaSelecionada);
+    this.despesaFoiSelecionada
+      .next(radioDespesaSelecionada);
   }
 
   notificarAtualizacaoListaDespesas(): void {
-    this.listaDespesaFoiAtualizada.next(this.despesas.slice());
+    this.listaDespesaFoiAtualizada
+      .next(this.despesas.slice());
   }
 
   notificarDespesaModificada(operacao: string) {

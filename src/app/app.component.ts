@@ -19,16 +19,8 @@ export class AppComponent implements OnInit, OnDestroy {
     this.despesaFoiModificada = this.despesasService
       .despesaFoiModificada
       .subscribe((operacao) => {
-        if (operacao == 'INCLUIDA') {
-          this.mostraAlerta = true;
-          this.textoAlerta = 'Despesa incluída com sucesso!'
-        } else if (operacao == 'ALTERADA') {
-          this.mostraAlerta = true;
-          this.textoAlerta = 'Despesa alterada com sucesso!'
-        } else if (operacao == 'EXCLUIDA') {
-          this.mostraAlerta = true;
-          this.textoAlerta = 'Despesa excluída com sucesso!'
-        }
+        this.mostraAlerta = true;
+        this.textoAlerta = 'Despesa ' + operacao + ' com sucesso.';
       });
   }
 

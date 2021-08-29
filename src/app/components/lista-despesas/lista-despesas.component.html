@@ -1,4 +1,4 @@
-<h1 class="titulo-pagina text-info">Controle Mensal</h1>
+<h2 class="titulo-pagina text-info">Controle Mensal ({{ valorTotalDespesas | moeda }})</h2>
 <hr>
 <div class="loading-spinner">
     <span *ngIf="carregando == true" class="spinner-border spinner-border-md text-info" role=" status"
@@ -8,25 +8,22 @@
 <ul *ngIf="carregando == false" class="list-group">
     <app-despesa-item *ngFor="let despesa of despesas" [despesa]="despesa">
     </app-despesa-item>
-    <li *ngIf="despesas.length == 0 && erroCarregarDespesas == false" class="list-group-item nenhuma-despesa">
-        Uau! Nenhuma despesa por aqui.
-    </li>
-    <li *ngIf="erroCarregarDespesas == true" class="list-group-item nenhuma-despesa erro-carregar text-danger">
-        {{ textoErro }}
-    </li>
+    <div *ngIf="erroCarregarDespesas == true" class="alert alert-danger alert-erro-carregar-despesas" role="alert">
+        {{ textoErro | uppercase }}
+    </div>
 </ul>
 <div class="btn-grupo-acoes" *ngIf="idDespesaSelecionada == ''">
-    <button *ngIf="carregando == false && erroCarregarDespesas == false" class="btn btn-outline-info"
+    <button *ngIf="carregando == false && erroCarregarDespesas == false" class="btn btn-info"
         [routerLink]="['/adicionar-despesa']">
-        Adicionar
+        Incluir
     </button>
 </div>
 <div class="col-xs-12 btn-grupo-acoes" *ngIf="idDespesaSelecionada != ''">
-    <button class="btn btn-outline-secondary" (click)="cancelarSelecaoDespesa()">
-        Voltar
-    </button>
-    <button class="btn btn-outline-info" [routerLink]="['/editar-despesa', idDespesaSelecionada]">
+    <button class="btn btn-info" [routerLink]="['/editar-despesa', idDespesaSelecionada]">
         Editar
     </button>
-    <button class="btn btn-outline-danger" (click)="excluirDespesa()">Excluir</button>
+    <button class="btn btn-secondary" (click)="excluirDespesa()">Excluir</button>
+    <button class="btn btn-secondary" (click)="cancelarSelecaoDespesa()">
+        Voltar
+    </button>
 </div>
