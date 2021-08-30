@@ -14,11 +14,15 @@
     color: #2dbf7a;
 }
 
+.alert-warning {
+    color: #ffa243;
+}
+
 .alert-danger, .erro-carregar {
     color: #f18690;
 }
 
-.alert-success, .alert-danger, .erro-carregar {
+.alert, .erro-carregar {
     text-align: center;
     border: none;
     letter-spacing: 4px;

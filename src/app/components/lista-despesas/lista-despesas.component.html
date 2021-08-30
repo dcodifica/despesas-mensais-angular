@@ -1,7 +1,7 @@
-<h2 class="titulo-pagina text-info">Controle Mensal ({{ valorTotalDespesas | moeda }})</h2>
+<h2 class="titulo-pagina text-primary">Controle Mensal ({{ valorTotalDespesas | moeda }})</h2>
 <hr>
 <div class="loading-spinner">
-    <span *ngIf="carregando == true" class="spinner-border spinner-border-md text-info" role=" status"
+    <span *ngIf="carregando == true" class="spinner-border spinner-border-md text-primary" role=" status"
         aria-hidden="true">
     </span>
 </div>
@@ -13,13 +13,13 @@
     </div>
 </ul>
 <div class="btn-grupo-acoes" *ngIf="idDespesaSelecionada == ''">
-    <button *ngIf="carregando == false && erroCarregarDespesas == false" class="btn btn-info"
+    <button *ngIf="carregando == false && erroCarregarDespesas == false" class="btn btn-primary"
         [routerLink]="['/adicionar-despesa']">
         Incluir
     </button>
 </div>
 <div class="col-xs-12 btn-grupo-acoes" *ngIf="idDespesaSelecionada != ''">
-    <button class="btn btn-info" [routerLink]="['/editar-despesa', idDespesaSelecionada]">
+    <button class="btn btn-primary" [routerLink]="['/editar-despesa', idDespesaSelecionada]">
         Editar
     </button>
     <button class="btn btn-secondary" (click)="excluirDespesa()">Excluir</button>
