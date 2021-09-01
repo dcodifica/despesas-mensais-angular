@@ -5,15 +5,16 @@
         aria-hidden="true">
     </span>
 </div>
+<div *ngIf="mostrarErro == true" class="alert alert-danger alert-erro" role="alert" (click)="ocultarAlerta()">
+    {{ textoErro | uppercase }}
+</div>
 <ul *ngIf="carregando == false" class="list-group">
-    <app-despesa-item *ngFor="let despesa of despesas" [despesa]="despesa">
+    <app-despesa-item *ngFor="let despesa of despesas" [despesa]="despesa"
+        (erroTrocarStatusDespesa)="mostrarErroAoGerenciarDespesa($event)">
     </app-despesa-item>
-    <div *ngIf="erroCarregarDespesas == true" class="alert alert-danger alert-erro-carregar-despesas" role="alert">
-        {{ textoErro | uppercase }}
-    </div>
 </ul>
 <div class="btn-grupo-acoes" *ngIf="idDespesaSelecionada == ''">
-    <button *ngIf="carregando == false && erroCarregarDespesas == false" class="btn btn-primary"
+    <button *ngIf="carregando == false && erroAoCarregarDespesas == false" class="btn btn-primary"
         [routerLink]="['/adicionar-despesa']">
         Incluir
     </button>

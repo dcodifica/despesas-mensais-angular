@@ -15,8 +15,9 @@ export class ListaDespesasComponent implements OnInit, OnDestroy {
   idDespesaSelecionada: string = '';
   radioDespesaSelecionada!: HTMLInputElement;
   carregando: boolean = false;
-  erroCarregarDespesas: boolean = false;
+  mostrarErro: boolean = false;
   textoErro: string = '';
+  erroAoCarregarDespesas: boolean = false;
   valorTotalDespesas: number = 0;
 
   constructor(private despesasService: DespesasService) { }
@@ -32,10 +33,28 @@ export class ListaDespesasComponent implements OnInit, OnDestroy {
     }
   }
 
-  excluirDespesa() {
+  excluirDespesa(): void {
     this.despesasService
       .excluirDespesa(this.idDespesaSelecionada)
-      .subscribe();
+      .subscribe(
+        resposta => { },
+        erro => {
+          this.mostrarErroAoGerenciarDespesa(erro);
+          this.cancelarSelecaoDespesa();
+        }
+      );
+  }
+
+  mostrarErroAoGerenciarDespesa(textoErro: string): void {
+    this.textoErro = textoErro;
+    this.mostrarErro = true;
+    this.erroAoCarregarDespesas = false;
+  }
+
+  ocultarAlerta(): void {
+    if (this.erroAoCarregarDespesas == false) {
+      this.mostrarErro = false;
+    }
   }
 
   criarSubscriptions(): void {
@@ -47,8 +66,9 @@ export class ListaDespesasComponent implements OnInit, OnDestroy {
         },
         erro => {
           this.carregando = false;
-          this.erroCarregarDespesas = true;
+          this.mostrarErro = true;
           this.textoErro = erro;
+          this.erroAoCarregarDespesas = true;
         }
       );
     this.despesasForamAlteradasSubscription =

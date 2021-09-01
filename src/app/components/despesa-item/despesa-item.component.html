@@ -8,7 +8,7 @@
             {{ despesa.nome }}
         </label>
     </div>
-    <span class="badge badge-pill pointer" (click)="trocarStatusDespesa(despesa.id)" [ngClass]="{ 
+    <span class="badge badge-pill pointer" (click)="trocarStatusDespesa()" [ngClass]="{ 
             'alert-success': despesa.paga == true, 
             'alert-warning': despesa.paga == false, 
             'badge-despesa-paga': despesa.paga == true }">

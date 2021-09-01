@@ -1,6 +1,6 @@
 import { DespesasService } from './../../services/despesas.service';
 import { Despesa } from './../../shared/despesa';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-despesa-item',
@@ -9,15 +9,22 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class DespesaItemComponent implements OnInit {
   @Input() despesa!: Despesa;
+  @Output() erroTrocarStatusDespesa: EventEmitter<string> =
+    new EventEmitter<string>();
 
   constructor(private despesasService: DespesasService) { }
 
   ngOnInit(): void { }
 
-  trocarStatusDespesa(idDespesa: string): void {
+  trocarStatusDespesa(): void {
     this.despesasService
-      .trocarStatusDespesa(idDespesa)
-      .subscribe();
+      .trocarStatusDespesa(this.despesa)
+      .subscribe(
+        resposta => { },
+        erro => {
+          this.erroTrocarStatusDespesa.emit(erro);
+        }
+      );
   }
 
   selecionarDespesa(event: MouseEvent): void {

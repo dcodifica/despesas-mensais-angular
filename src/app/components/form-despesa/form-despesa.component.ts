@@ -43,7 +43,7 @@ export class FormDespesaComponent implements OnInit {
     this.salvando = true;
     if (this.modoEdicao == true) {
       this.despesasService
-        .editarDespesa(this.despesa)
+        .editarDespesa(this.despesa, false)
         .subscribe(
           resposta => {
             this.salvando = false;

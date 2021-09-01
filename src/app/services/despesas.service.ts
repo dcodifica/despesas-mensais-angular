@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, Subject, throwError } from 'rxjs';
 import { map, tap, catchError } from 'rxjs/operators';
@@ -33,10 +33,8 @@ export class DespesasService {
           this.despesas = resposta;
           this.notificarAtualizacaoListaDespesas();
         }),
-        catchError(erro => {
-          return throwError('Erro ao carregar despesas: ' +
-            erro.statusText);
-        }));
+        catchError(this.tratarErrosHttp)
+      );
   }
 
   getDespesa(idDespesa: string): Despesa {
@@ -54,11 +52,8 @@ export class DespesasService {
     return total;
   }
 
-  trocarStatusDespesa(idDespesa: string): Observable<any> {
-    const indexDespesa = this.getDespesaIndex(idDespesa);
-    this.despesas[indexDespesa].paga =
-      !this.despesas[indexDespesa].paga;
-    return this.editarDespesa(this.despesas[indexDespesa]);
+  trocarStatusDespesa(despesa: Despesa): Observable<any> {
+    return this.editarDespesa(despesa, true);
   }
 
   tratarDespesa(despesa: Despesa): Despesa {
@@ -82,15 +77,15 @@ export class DespesasService {
       tap(() => {
         this.notificarDespesaModificada('adicionada');
       }),
-      catchError(erro => {
-        return throwError('Erro ao salvar despesa: '
-          + erro.statusText);
-      })
+      catchError(this.tratarErrosHttp)
     );
   }
 
-  editarDespesa(despesa: Despesa): Observable<any> {
+  editarDespesa(despesa: Despesa, apenasTrocouStatus: boolean): Observable<any> {
     const despesaEditada = this.tratarDespesa(despesa);
+    if (apenasTrocouStatus == true) {
+      despesaEditada.paga = !despesaEditada.paga;
+    }
     return this.http.patch(
       this.firebaseUrl + 'despesas/' + despesaEditada.id + '.json',
       despesaEditada
@@ -98,10 +93,7 @@ export class DespesasService {
       tap(() => {
         this.notificarDespesaModificada('alterada');
       }),
-      catchError(erro => {
-        return throwError('Erro ao editar despesa: '
-          + erro.statusText);
-      })
+      catchError(this.tratarErrosHttp)
     );
   }
 
@@ -117,10 +109,14 @@ export class DespesasService {
         this.despesas = despesas;
         this.notificarDespesaModificada('removida');
       }),
-      catchError(erro => {
-        return throwError('Erro ao excluir despesa');
-      })
+      catchError(this.tratarErrosHttp)
     );
+  }
+
+  tratarErrosHttp(erro: HttpErrorResponse) {
+    return throwError(
+      'Erro ao executar o procedimento: ' +
+      erro.statusText);
   }
 
   notificarDespesaSelecionada(
